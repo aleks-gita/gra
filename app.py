@@ -77,7 +77,7 @@ class Partia:
     def __init__(self, imiona =['Ala', 'Bob']):
       self.sklep_talia=[randint(0,10) for i in range(3)]
       self.sklep_wystawione=[randint(0,10) for i in range(3)]
-      self.gracze= [Gracz(imię) for imię in imiona if imię]
+      self.gracze= [Gracz(imie) for imie in imiona if imie]
      
 
 partia = None
@@ -91,19 +91,16 @@ def index():
 @app.route('/plansza', methods=['GET', 'POST'])
 def plansza():
     global partia, ID_GRACZA
-    if request.method == 'POST': 
+    if request.method == 'POST':
+        #trzeba uzupelnic o to zeby mozna bylo tylko raz wylozyc karty w turze
         if request.form['action']=="Wyloz karty":
-            for gracz in partia.gracze:
-                gracz.wyloz_karty()
+            partia.gracze[ID_GRACZA].wyloz_karty()
         if request.form['action']=="Zakoncz ture":
-            for gracz in partia.gracze:
-                gracz.koniec_tury()
-                if len(gracz.talia) == 0:
-                    gracz.koniec_talii()
-                    
+            partia.gracze[ID_GRACZA].koniec_tury()
+            if len(partia.gracze[ID_GRACZA].talia) == 0:
+                partia.gracze[ID_GRACZA].koniec_talii()
             ID_GRACZA += 1
-            ID_GRACZA %= len(partia.gracze) 
-      
+            ID_GRACZA %= len(partia.gracze)    
       
     return render_template('plansza.html', partia=partia, aktywny_gracz = ID_GRACZA )
     
