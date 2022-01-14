@@ -48,12 +48,10 @@ class Gracz:
       self.reka = []
       self.odrzucone = []
       self.potasuj()
-      self.wyloz_karty()
-      self.koniec_tury()
-      #self.koniec_talii()
-      self.wyloz_karty()
-      self.koniec_tury()
-      self.koniec_talii()
+      
+      
+     # self.koniec_tury()
+      
     def potasuj(self):
       shuffle(self.talia)
     def wyloz_karty(self):
@@ -64,16 +62,16 @@ class Gracz:
     def kup_karte(self):
         pass
     def odrzuc_karte(self):
-      self.odrzucone.append(self.talia[1])
+      self.odrzucone.extend(self.talia[1])
       del self.talia[1]
     def koniec_tury(self):
-      self.odrzucone.append(self.reka[:])
+      self.odrzucone.extend(self.reka[:])
       del self.reka[:] 
     def koniec_talii(self):
-      self.talia.append(self.odrzucone[:])
+      self.talia.extend(self.odrzucone[:])
       del self.odrzucone[:]
       shuffle(self.talia)
-    
+   
     
 class Partia:
     def __init__(self, imiona =['Ala', 'Bob']):
@@ -93,10 +91,19 @@ def index():
 @app.route('/plansza', methods=['GET', 'POST'])
 def plansza():
     global partia, ID_GRACZA
-    if request.method == 'POST':
-        ID_GRACZA += 1
-        ID_GRACZA %= len(partia.gracze) 
-        Gracz.wyloz_karty()
+    if request.method == 'POST': 
+        if request.form['action']=="Wyloz karty":
+            for gracz in partia.gracze:
+                gracz.wyloz_karty()
+        if request.form['action']=="Zakoncz ture":
+            for gracz in partia.gracze:
+                gracz.koniec_tury()
+                if len(gracz.talia) == 0:
+                    gracz.koniec_talii()
+                    
+            ID_GRACZA += 1
+            ID_GRACZA %= len(partia.gracze) 
+      
       
     return render_template('plansza.html', partia=partia, aktywny_gracz = ID_GRACZA )
     

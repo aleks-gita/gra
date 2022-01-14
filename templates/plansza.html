@@ -34,10 +34,13 @@
 		{% endfor%}
 	</table>
 	<form action="{{url_for('plansza')}}" method="post">
-		<input type="submit" value="Zakoncz ture">
+		<input type="submit" name="action" value="Wyloz karty">
+	</form>
+	<form action="{{url_for('plansza')}}" method="post">
+		<input type="submit" name="action" value="Zakoncz ture">
 	</form>
 	<form action="{{url_for('cards')}}" method="get">
-		<input type="submit" value="Pokarz karty">
+		<input type="submit" name="action" value="Pokarz karty">
 	</form>
 	</body>
 </html>
