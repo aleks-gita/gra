@@ -1,0 +1,48 @@
+from sqlalchemy import MetaData, create_engine
+engine= create_engine('sqlite:///C:\\Users\\win\\Documents\\my_flask\\Gra.db')
+
+META_DATA = MetaData(bind=engine)
+
+
+
+c=engine.connect()
+
+META_DATA.reflect()
+
+hero=META_DATA.tables['Hero_1']
+
+hs = hero.select()
+
+result = engine.execute(hs)
+
+for row in result:
+    print(row)
+...........................................
+
+
+
+
+
+
+USERS_TABLE = META_DATA.tables['users']
+
+
+META_DATA.reflect()
+hero=META_DATA.tables['Hero_1']
+hs = hero.select()
+result = engine.execute(hs)
+for row in result:
+...     print(row)
+class hero(Base):
+...     __table__=Table('Hero_1', Base.metadata, autoload=True, autoload_with=engine)
+
+engine= create_engine('sqlite:///C:\\Users\\win\\Documents\\my_flask\\Gra.db')
+
+from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.orm import Session
+
+Base = automap_base()
+Base.prepare()
+
+ class hero(Base):
+...     __table__=Table('Hero_1', Base.metadata, autoload=True, autoload_with=engine)
