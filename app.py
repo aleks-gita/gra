@@ -38,9 +38,31 @@ result = engine.execute(hero_select)
 #result dla poczatkowej reki
 a=engine.execute(reka_select)
 result2= a.fetchall()
-
-
-
+  
+   
+    
+class Partia:
+    def __init__(self, imiona =['Ala', 'Bob']):
+      self.sklep_talia=['karta1','karta2','karta3','karta4','karta5','karta6','karta7','karta8','karta9']
+      self.sklep_wystawione=[]
+      self.gracze= [Gracz(imie) for imie in imiona if imie]
+      self.sprzedane=[]
+      self.wystaw()
+      #self.sprzedaj()
+    def wystaw(self):
+      ilosc = len(self.sklep_wystawione)
+      if ilosc != 5:
+        self.sklep_wystawione.extend(self.sklep_talia[:(5-ilosc)])
+        del self.sklep_talia[:(5-ilosc)]
+    #wyciagniecie karty ze sklepu - nie dziala
+    def karta(self): 
+      sprzedana = self.sklep_wystawione[:1] 
+      return sprzedana
+    #usuniecie kart i uzupelnienie do 5 wystawionych
+    def sprzedaj(self):
+      del self.sklep_wystawione[:1]
+      self.wystaw()
+      
 class Gracz:
     def __init__(self, imie='Nieznane'):
       self.nazwa = imie
@@ -48,10 +70,7 @@ class Gracz:
       self.reka = []
       self.odrzucone = []
       self.potasuj()
-      
-      
-     # self.koniec_tury()
-      
+     # self.koniec_tury()  
     def potasuj(self):
       shuffle(self.talia)
     def wyloz_karty(self):
@@ -71,14 +90,13 @@ class Gracz:
       self.talia.extend(self.odrzucone[:])
       del self.odrzucone[:]
       shuffle(self.talia)
-   
-    
-class Partia:
-    def __init__(self, imiona =['Ala', 'Bob']):
-      self.sklep_talia=[randint(0,10) for i in range(3)]
-      self.sklep_wystawione=[randint(0,10) for i in range(3)]
-      self.gracze= [Gracz(imie) for imie in imiona if imie]
-     
+    #dodanie kupionej karty
+    def kup(self,karta):
+      self.odrzucone.extend(karta)
+  
+#wyciagniecie metody sprzedawania z Partia  
+sprzedaj=Partia()
+karta=sprzedaj.karta()
 
 partia = None
 ID_GRACZA = 0
@@ -91,7 +109,9 @@ def index():
 @app.route('/plansza', methods=['GET', 'POST'])
 def plansza():
     global partia, ID_GRACZA
+    partia.wystaw() # wystawienie kart do sklepu
     if request.method == 'POST':
+        
         #trzeba uzupelnic o to zeby mozna bylo tylko raz wylozyc karty w turze
         if request.form['action']=="Wyloz karty":
             partia.gracze[ID_GRACZA].wyloz_karty()
@@ -99,8 +119,13 @@ def plansza():
             partia.gracze[ID_GRACZA].koniec_tury()
             if len(partia.gracze[ID_GRACZA].talia) == 0:
                 partia.gracze[ID_GRACZA].koniec_talii()
+            partia.sprzedaj()#usuniecie kart kupionych i uzupelnienie
             ID_GRACZA += 1
-            ID_GRACZA %= len(partia.gracze)    
+            ID_GRACZA %= len(partia.gracze) 
+        #kupowanie karty 
+        if request.form['action']=="Kup karty":
+            partia.gracze[ID_GRACZA].kup(karta)
+            
       
     return render_template('plansza.html', partia=partia, aktywny_gracz = ID_GRACZA )
     
