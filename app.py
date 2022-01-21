@@ -56,11 +56,12 @@ class Partia:
         del self.sklep_talia[:(5-ilosc)]
     #wyciagniecie karty ze sklepu - nie dziala
     def karta(self): 
-      sprzedana = self.sklep_wystawione[:1] 
+      sprzedana = self.sklep_wystawione[:1]
+      self.sklep_wystawione.pop(0)
       return sprzedana
     #usuniecie kart i uzupelnienie do 5 wystawionych
     def sprzedaj(self):
-      del self.sklep_wystawione[:1]
+      self.sklep_wystawione.pop(0)
       self.wystaw()
       
 class Gracz:
@@ -70,7 +71,7 @@ class Gracz:
       self.reka = []
       self.odrzucone = []
       self.potasuj()
-     # self.koniec_tury()  
+     #self.koniec_tury()  
     def potasuj(self):
       shuffle(self.talia)
     def wyloz_karty(self):
@@ -96,7 +97,7 @@ class Gracz:
   
 #wyciagniecie metody sprzedawania z Partia  
 sprzedaj=Partia()
-karta=sprzedaj.karta()
+#karta=sprzedaj.karta()
 
 partia = None
 ID_GRACZA = 0
@@ -110,6 +111,7 @@ def index():
 def plansza():
     global partia, ID_GRACZA
     partia.wystaw() # wystawienie kart do sklepu
+    
     if request.method == 'POST':
         
         #trzeba uzupelnic o to zeby mozna bylo tylko raz wylozyc karty w turze
@@ -124,6 +126,7 @@ def plansza():
             ID_GRACZA %= len(partia.gracze) 
         #kupowanie karty 
         if request.form['action']=="Kup karty":
+            karta=sprzedaj.karta()
             partia.gracze[ID_GRACZA].kup(karta)
             
       
