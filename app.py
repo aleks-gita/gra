@@ -47,6 +47,7 @@ class Partia:
       self.sklep_talia=[10,20,30,40,50,60,70,80,90,100]
       self.sklep_wystawione=[]
       self.gracze= [Gracz(imie) for imie in imiona if imie]
+      self.sprzedane=[]
       self.wystaw()
       #self.sprzedaj()
     def wystaw(self):
@@ -54,12 +55,14 @@ class Partia:
       if ilosc != 5:
         self.sklep_wystawione.extend(self.sklep_talia[:(5-ilosc)])
         del self.sklep_talia[:(5-ilosc)]
-    def karta(self, karta): 
-      
+    def karta(self, sprzedane): 
       if len(self.sklep_wystawione) != 0:
-        sprzedana = self.sklep_wystawione[karta]
-        self.sklep_wystawione.pop(karta)
-        return sprzedana
+        #self.sprzedane.extend(karta)
+        self.sprzedane = sprzedane
+        for karta in self.sprzedane:
+            self.sklep_wystawione.pop(karta)
+        print(self.sprzedane)
+        return self.sprzedane
       else:
         print('koniec sklepu')
       return        
@@ -96,9 +99,10 @@ class Gracz:
       del self.odrzucone[:]
       shuffle(self.talia)
     #dodanie kupionej karty
-    def kup(self,karta):
-      if karta != None:
-        self.odrzucone.append(karta)
+    def kup(self,sprzedane):
+      if sprzedane != None:
+        for x in sprzedane:
+            self.odrzucone.append(x)
   
 #wyciagniecie metody sprzedawania z Partia  
 
@@ -133,8 +137,8 @@ def plansza():
         #    karta=partia.karta()
         #    partia.gracze[ID_GRACZA].kup(karta)
         if request.form['action']=="KUP":
-            karta=partia.karta(request.form.getlist('karta', type=int))
-            partia.gracze[ID_GRACZA].kup(karta)
+            sprzedane=partia.karta(request.form.getlist('karta', type=int))
+            partia.gracze[ID_GRACZA].kup(sprzedane)
         
             
       
