@@ -20,8 +20,8 @@
 			<form action="{{url_for('plansza')}}" method="post">
 				<td>
 				{% for karta in partia.sklep_wystawione %}
-					<input type="checkbox" id="id_{{karta}}" name="karta" value="{{karta.id}}">
-					<label for="id_{{karta}}">{{karta}}</label>
+					<input type="checkbox" name="karta" value="{{loop.index0}}">
+					<label for="id_{{karta}}">{{loop.index0}} {{karta}}</label>
 				{% endfor%}
 				</td>
 			<input type="submit" name="action" value="KUP">

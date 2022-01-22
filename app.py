@@ -3,6 +3,7 @@ from flask import render_template
 from random import randint
 from random import shuffle
 from flask import request, redirect
+from jinja2 import Template
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData, create_engine
 from gracz import Gracz
@@ -43,7 +44,7 @@ result2= a.fetchall()
     
 class Partia:
     def __init__(self, imiona =['Ala', 'Bob']):
-      self.sklep_talia=['karta1','karta2','karta3','karta4','karta5','karta6','karta7','karta8','karta9']
+      self.sklep_talia=[10,20,30,40,50,60,70,80,90,100]
       self.sklep_wystawione=[]
       self.gracze= [Gracz(imie) for imie in imiona if imie]
       self.wystaw()
@@ -53,7 +54,6 @@ class Partia:
       if ilosc != 5:
         self.sklep_wystawione.extend(self.sklep_talia[:(5-ilosc)])
         del self.sklep_talia[:(5-ilosc)]
-    #wyciagniecie karty ze sklepu - nie dziala
     def karta(self, karta): 
       if len(self.sklep_wystawione) != 0:
         sprzedana = self.sklep_wystawione[karta]
@@ -61,8 +61,7 @@ class Partia:
         return sprzedana
       else:
         print('koniec sklepu')
-      return
-        
+      return        
     #usuniecie kart i uzupelnienie do 5 wystawionych
     def sprzedaj(self):
       self.sklep_wystawione.pop(0)
