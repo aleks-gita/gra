@@ -58,11 +58,12 @@ class Partia:
     def karta(self, sprzedane): 
       if len(self.sklep_wystawione) != 0:
         #self.sprzedane.extend(karta)
-        self.sprzedane = sprzedane
-        for karta in self.sprzedane:
-            self.sklep_wystawione.pop(karta)
-        print(self.sprzedane)
-        return self.sprzedane
+        for sprzedane in self.sklep_wystawione:
+            self.sprzedane.extend(sprzedane)
+            for karta in self.sprzedane:
+                del self.sklep_wystawione[karta]
+            print(self.sprzedane)
+            return self.sprzedane
       else:
         print('koniec sklepu')
       return        
