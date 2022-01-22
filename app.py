@@ -55,6 +55,7 @@ class Partia:
         self.sklep_wystawione.extend(self.sklep_talia[:(5-ilosc)])
         del self.sklep_talia[:(5-ilosc)]
     def karta(self, karta): 
+      
       if len(self.sklep_wystawione) != 0:
         sprzedana = self.sklep_wystawione[karta]
         self.sklep_wystawione.pop(karta)
@@ -132,7 +133,7 @@ def plansza():
         #    karta=partia.karta()
         #    partia.gracze[ID_GRACZA].kup(karta)
         if request.form['action']=="KUP":
-            karta=partia.karta(request.form.get('karta'))
+            karta=partia.karta(request.form.getlist('karta', type=int))
             partia.gracze[ID_GRACZA].kup(karta)
         
             
