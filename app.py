@@ -55,18 +55,16 @@ class Partia:
       if ilosc != 5:
         self.sklep_wystawione.extend(self.sklep_talia[:(5-ilosc)])
         del self.sklep_talia[:(5-ilosc)]
-    def karta(self, sprzedane): 
-      if len(self.sklep_wystawione) != 0:
-        #self.sprzedane.extend(karta)
-        for sprzedane in self.sklep_wystawione:
-            self.sprzedane.extend(sprzedane)
-            for karta in self.sprzedane:
-                del self.sklep_wystawione[karta]
-            print(self.sprzedane)
-            return self.sprzedane
+    def karta(self, sprzedane):
+      if len(self.sklep_wystawione)!= 0:
+        self.sprzedane = [self.sklep_wystawione[x] for x in sprzedane ]
+        robocza_lista = [x for x in self.sklep_wystawione if x not in self.sprzedane]
+        self.sklep_wystawione = robocza_lista
+        return self.sprzedane
+        self.sprzedane=[]
       else:
-        print('koniec sklepu')
-      return        
+        print("koniec sklepu")
+      return       
     #usuniecie kart i uzupelnienie do 5 wystawionych
     def sprzedaj(self):
       self.sklep_wystawione.pop(0)
