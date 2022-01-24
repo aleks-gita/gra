@@ -47,11 +47,13 @@
 		{% endfor%}
 		
 	</table>
+		{% for row in result_monety%}
+		<tr>
+			<td>{{row}}</td>
+		</tr>
+		{% endfor%}
 	<form action="{{url_for('plansza')}}" method="post">
 		<input type="submit" name="action" value="Wyloz karty">
-	</form>
-	<form action="{{url_for('plansza')}}" method="post">
-		<input type="submit" name="action" value="Kup karty">
 	</form>
 	<form action="{{url_for('plansza')}}" method="post">
 		<input type="submit" name="action" value="Zakoncz ture">

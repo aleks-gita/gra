@@ -6,6 +6,7 @@ from flask import request, redirect
 from jinja2 import Template
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData, create_engine
+from sqlalchemy import text
 from gracz import Gracz
 from partia import Partia
 
@@ -32,13 +33,23 @@ hero=META_DATA.tables['Hero_1']
 reka=META_DATA.tables['Reka']
 
 reka_select = reka.select()
-hero_select = hero.select()
-
-# result dla wszystkich kart
-result = engine.execute(hero_select)
 #result dla poczatkowej reki
 a=engine.execute(reka_select)
 result2= a.fetchall()
+
+hero_select = hero.select()
+# result dla wszystkich kart
+result = engine.execute(hero_select)
+
+id_selct= text("SELECT id FROM Reka")
+id_sel=engine.execute(id_selct)
+result_id=id_sel.fetchall
+
+reka_pieniadze = text("SELECT SUM(Monety) as monety FROM Reka")
+#text("SELECT Monety FROM REKA")
+#text("SELECT SUM(Monety) as monety FROM Reka")
+b=engine.execute(reka_pieniadze)
+result_monety = b.fetchall
   
    
     
@@ -77,6 +88,8 @@ class Gracz:
       self.reka = []
       self.odrzucone = []
       self.potasuj()
+      self.wyloz_karty()
+      self.sumuj_monety()
      #self.koniec_tury()  
     def potasuj(self):
       shuffle(self.talia)
@@ -102,6 +115,13 @@ class Gracz:
       if sprzedane != None:
         for x in sprzedane:
             self.odrzucone.append(x)
+    def sumuj_monety(self):
+    #lista2 = [dziecko for dziecko in lista if dziecko != 'x']
+      monety= [result_monety for result_monety in self.reka]
+      print(monety)
+      
+      
+    
   
 #wyciagniecie metody sprzedawania z Partia  
 
@@ -141,7 +161,7 @@ def plansza():
         
             
       
-    return render_template('plansza.html', partia=partia, aktywny_gracz = ID_GRACZA, x=0 )
+    return render_template('plansza.html', partia=partia, aktywny_gracz = ID_GRACZA, result_monety=engine.execute(reka_pieniadze))
     
 @app.route('/create', methods=['GET', 'POST'])
 def create():
